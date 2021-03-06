@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<title>Movies and reviews</title>
+</head>
+<body style="background:black;">
+	<div>
+		<ul class="nav nav-tabs bg-secondary text-center p-2">
+ 			<li class="nav-item">
+  	 	 		<a class="nav-link font-weight-bold text-warning" data-toggle="tab" href="/backToHomePage"><mark class="bg-warning p-2" style="box-shadow: 1px 2px 2px black;">REFRESH</mark></a>
+  			</li>
+  			<li class="nav-item">
+    			<a class="nav-link font-weight-bold text-warning" data-toggle="tab" href="/addReview" style="text-shadow: 1px 2px 2px black;">ADD NEW REVIEW FOR EXISTING MOVIEW</a>
+  			</li>
+  			<li class="nav-item">
+   				 <a class="nav-link font-weight-bold text-warning" data-toggle="tab" href="/addMovie" style="text-shadow: 1px 2px 2px black;">ADD A NEW MOVIE</a>
+  			</li>
+		</ul>
+	</div>
+	
+	<div class="text-warning p-2 m-2 text-center font-weight-bold">
+		<div class="m-3 text-right" style="display:inline-block;">
+			<form method="post" th:action="updateReviewsWithMovie">
+				<label for="title" style="text-shadow: 1px 2px 2px grey; font-size:1.2em;">Movie:</label>
+				<select name="title">
+					<option th:each="t: ${movieList}" th:value="${t.title}" th:text="${t.title}"/>
+				</select><br>
+				<input type="submit" value="Search Reviews" class="bg-warning text-center" style="box-shadow: 1px 2px 2px white;"/>
+			</form>
+		</div>
+		
+		<div class="m-3 p-2 text-right" style="display:inline-block;">
+			<form method="post" th:action="findByRateGreaterThan">
+				<label style="text-shadow: 1px 2px 2px grey; font-size:1.2em;">Rating Greater Than</label>
+				<input type="number" step="0.1" name="rate"> <br>
+				<input type="submit" value="Search Movies" class="bg-warning text-center" style="box-shadow: 1px 2px 2px white;"/>
+			</form>
+		</div>
+		
+		<div class="m-3 p-2 text-right" style="display:inline-block;">
+			<form method="post" th:action="findByYearBefore">
+				<label style="text-shadow: 1px 2px 2px grey; font-size:1.2em;">Release Year Before</label>
+				<input type="number" name="year"><br>
+				<input type="submit" value="Search Movies" class="bg-warning text-center" style="box-shadow: 1px 2px 2px white;"/>
+			</form>
+		</div>
+		
+		<div class="m-3 p-2 text-right" style="display:inline-block;">
+			<form method="post" th:action="findByReviewListIsNull">
+				<label style="text-shadow: 1px 2px 2px grey; font-size:1.2em;">No Reviews</label><br>
+				<input type="submit" value="Search Movies" class="bg-warning text-center" style="box-shadow: 1px 2px 2px white;" />
+			</form>
+		</div>	
+		
+		<div class="m-3 p-2 text-right" style="display:inline-block;">
+			<form method="post" th:action="findByAuthor">
+				<label style="text-shadow: 1px 2px 2px grey; font-size:1.2em;">Reviewer</label>
+				<input type="text" name="author"><br>
+				<input type="submit" value="Search Reviewer" class="bg-warning text-center" style="box-shadow: 1px 2px 2px white;" />
+			</form>
+		</div>	
+	</div>
+
+	<!-- Movies display -->
+	<div class="text-warning m-5 text-center">
+		<h2 style="text-shadow: 1px 2px 2px grey;">Movie List</h2>		
+		<table class="table table-bordered border-white w-100"
+			th:if="${movieList!=null and !movieList.empty}">
+			<tr>
+				<th><a href="/orderByTitle" class="text-warning" style="text-decoration:overline;">Title</a></th>
+				<th><a href="/orderByYear" class="text-warning" style="text-decoration:overline;">Year</a></th>
+				<th><a href="/orderByRate" class="text-warning" style="text-decoration:overline;">Rate</a></th>
+				<th>Streaming Service</th>
+			</tr>
+			<tr th:each="aMovie:${movieList}">
+				<td th:text="${aMovie.title}">Alive</td>
+				<td th:text="${aMovie.year}">2020</td>
+				<td th:text="${aMovie.rate}">5</td>  
+				<td th:text="${aMovie.streaming}">Netflix</td> 
+			</tr>
+		</table>
+	</div>
+	
+	<!-- Movies with reviews display -->
+	<div class="text-warning m-5 text-center"
+			th:if="${reviewList!=null and !reviewList.empty}">
+		<h2 style="text-shadow: 1px 2px 2px grey;">Movie List With Reviews</h2>
+		<table class="table-bordered border-white w-100">
+			<tr>
+				<th style="padding:1em;">Title</th>
+				<th style="padding:1em;">Year</th>
+				<th style="padding:1em;">Rate</th>
+				<th style="padding:1em;">Streaming Service</th>
+				<th style="padding:1em;">Reviews</th>
+			</tr>
+			<tr th:each="m:${movie}">
+				<td th:text="${m.title}" style="padding:1em;">Alive</td>
+				<td th:text="${m.year}" style="padding:1em;">2020</td>
+				<td th:text="${m.rate}" style="padding:1em;">5</td>  
+				<td th:text="${m.streaming}" style="padding:1em;">Netflix</td> 
+				<td>
+					<table class="w-100" style="border-style: hidden;border-collapse: collapse;">
+						<tr>
+							<th style="padding:1em;">Author</th>
+							<th style="padding:1em;">Date</th>
+							<th style="padding:1em;">Content</th>
+						</tr>
+						<tr th:each="review : ${reviewList}" >
+							<td th:text="${review.author}" style="padding:1em;">John</td>
+							<td th:text="${review.date}" style="padding:1em;">2020-01-01</td>
+							<td th:text="${review.content}" style="padding:1em;">good</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<!-- Reviewers display -->
+ 	<div class="text-warning m-5 text-center"
+			th:if="${movieReview!=null and !movieReview.empty}">
+		<h2 style="text-shadow: 1px 2px 2px grey;">Reviewer</h2>
+		<table class="table-bordered border-white w-100">
+			<tr>
+				<th style="padding:1em;">Author</th>
+				<th style="padding:1em;">Date</th>
+				<th style="padding:1em;">Content</th>
+				<th style="padding:1em;">Title</th>
+			</tr>
+			<tr th:each="result:${movieReview}">
+				<td th:text="${result.value.author}" style="padding:1em;">John</td>
+				<td th:text="${result.value.date}" style="padding:1em;">2020-01-01</td>
+				<td th:text="${result.value.content}" style="padding:1em;">good</td>
+				<td th:text="${result.key}" style="padding:1em;">Alive</td>
+			</tr>
+		</table>
+	</div>
+
+</body>
+</html>

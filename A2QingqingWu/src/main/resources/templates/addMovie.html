@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<title>Add Movie</title>
+</head>
+<body style="background:black;">
+	<div>
+		<ul class="nav nav-tabs bg-secondary text-center p-3">
+ 			<li class="nav-item">
+  	 	 		<mark class="bg-secondary font-weight-bold text-warning p-2" style="text-shadow: 1px 2px 2px black;">[Movie Review System]</mark>
+  			</li>
+		</ul>
+	</div>
+
+	<div class="text-warning m-5 text-center">
+	
+		<h1 style="text-shadow: 1px 2px 2px grey;">Add a new movie</h1>
+		
+		<div class="border border-white p-5 m-5">
+			<form method="post" th:action="addMovie" th:object="${movie}">
+				<input type="hidden" th:field="*{id}" /> 
+				
+				<label for="title">Movie Name: </label> 
+				<input type="text" th:field="*{title}" /><br>
+				<br> 
+				
+				<label for="year">Release Year: </label> 
+				<input type="number" th:field="*{year}" /><br>
+				<br> 
+				
+				<label for="rate">Rating (Out of 10): </label> 
+				<input type="number" step="0.1" th:field="*{rate}" /><br>
+				<br>
+				 
+				<label for="streaming">Streaming Service: </label> 
+				<input type="text" th:field="*{streaming}" /><br>
+				<br> 
+				
+				<input type="submit" value="Add Movie!" />
+			</form>
+		</div>
+		
+	</div>
+	
+</body>
+</html>
